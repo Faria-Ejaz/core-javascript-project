@@ -51,7 +51,7 @@
     </div>
     <script id="myJson" src="json/data.js"></script>
     <script>
-      var B = [];
+      var tbody = document.getElementById("tbody");
       function getRandomArray(min, max) {
         var A = [];
         while (max >= min) A.push(max--);
@@ -63,32 +63,55 @@
         return A;
       }
       function sortted() {
-        var arr = [];
-        for (var i in TABLE_DATA) {
-          var o = {};
-          if (TABLE_DATA.hasOwnProperty(i)) {
-            o.id = i;
-            o.name = TABLE_DATA[i].name;
-            arr.push(o);
+        while (tbody.firstChild) {
+          tbody.removeChild(tbody.firstChild);
+        }
+        var B = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
+        for (var j = 0; j < TABLE_DATA.length; j++) {
+          for (var i = 0; i < TABLE_DATA.length; i++) {
+            if (B[j] == parseInt(TABLE_DATA[i].id)) {
+              var tr = document.createElement("TR");
+              var th = document.createElement("TH");
+              th.setAttribute("id", "id" + i);
+              var th1 = document.createElement("TH");
+              var img = document.createElement("IMG");
+              img.setAttribute("id", "img" + i);
+              var th2 = document.createElement("TH");
+              th2.setAttribute("id", "name" + i);
+              var th3 = document.createElement("TH");
+              th3.setAttribute("id", "price" + i);
+
+              th1.appendChild(img);
+              tr.appendChild(th);
+              tr.appendChild(th1);
+              tr.appendChild(th2);
+              tr.appendChild(th3);
+
+              tbody.appendChild(tr);
+
+              document.getElementById("id" + i).innerHTML = TABLE_DATA[i].id;
+              document
+                .getElementById("img" + i)
+                .setAttribute("src", TABLE_DATA[i].thumbnailUrl);
+              if (i != 4) {
+                document.getElementById("name" + i).innerHTML =
+                  TABLE_DATA[i].name;
+              }
+              document.getElementById("price" + i).innerHTML =
+                TABLE_DATA[i].price;
+            }
           }
         }
-        arr.sort(function(a, b) {
-          a.id - b.id;
-        });
-        console.log("arr: ", arr);
-        return arr;
       }
       function arrangeRandomly() {
-        var tbody = document.getElementById("tbody");
         var randomArray = [];
 
         while (tbody.firstChild) {
           tbody.removeChild(tbody.firstChild);
         }
         randomArray = getRandomArray(0, 9);
-        B = sortted();
 
-        randomArray.sort().forEach(i => {
+        randomArray.forEach(i => {
           var tr = document.createElement("TR");
           var th = document.createElement("TH");
           th.setAttribute("id", "id" + i);
@@ -108,31 +131,29 @@
 
           tbody.appendChild(tr);
 
-          document.getElementById("id" + i).innerHTML = B[i].id;
+          document.getElementById("id" + i).innerHTML = TABLE_DATA[i].id;
 
           document
             .getElementById("img" + i)
-            .setAttribute("src", B[i].thumbnailUrl);
+            .setAttribute("src", TABLE_DATA[i].thumbnailUrl);
           if (i != 4) {
-            document.getElementById("name" + i).innerHTML = B[i].name;
+            document.getElementById("name" + i).innerHTML = TABLE_DATA[i].name;
           }
-          document.getElementById("price" + i).innerHTML = B[i].price;
+          document.getElementById("price" + i).innerHTML = TABLE_DATA[i].price;
         });
       }
-      var tbody = document.getElementById("tbody");
       for (var i = 0; i < TABLE_DATA.length; i++) {
         var tr = document.createElement("TR");
-        for (var j = 0; j < 1; j++) {
-          var th = document.createElement("TH");
-          th.setAttribute("id", "id" + i);
-          var th1 = document.createElement("TH");
-          var img = document.createElement("IMG");
-          img.setAttribute("id", "img" + i);
-          var th2 = document.createElement("TH");
-          th2.setAttribute("id", "name" + i);
-          var th3 = document.createElement("TH");
-          th3.setAttribute("id", "price" + i);
-        }
+        var th = document.createElement("TH");
+        th.setAttribute("id", "id" + i);
+        var th1 = document.createElement("TH");
+        var img = document.createElement("IMG");
+        img.setAttribute("id", "img" + i);
+        var th2 = document.createElement("TH");
+        th2.setAttribute("id", "name" + i);
+        var th3 = document.createElement("TH");
+        th3.setAttribute("id", "price" + i);
+
         th1.appendChild(img);
         tr.appendChild(th);
         tr.appendChild(th1);
