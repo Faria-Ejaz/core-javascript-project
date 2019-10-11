@@ -15,7 +15,7 @@
       <form class="form-horizontal" role="form">
         <div class="form-group">
           <button
-            onclick="started()"
+            onclick="arrangeRandomelyAfterEveryTwoSec()"
             id="start"
             type="button"
             class="btn btn-default"
@@ -23,7 +23,7 @@
             start random
           </button>
           <button
-            onclick="stopped()"
+            onclick="stopRandomTimer()"
             id="stop"
             type="button"
             class="btn btn-default"
@@ -31,7 +31,7 @@
             stop random
           </button>
           <button
-            onclick="sortted()"
+            onclick="sortTableList()"
             id="sort"
             type="button"
             class="btn btn-default"
@@ -55,111 +55,21 @@
       </div>
     </div>
     <script id="myJson" src="json/data.js"></script>
+
     <script>
       var tbody = document.getElementById("tbody");
-      function getRandomArray(min, max) {
-        var A = [];
-        while (max >= min) A.push(max--);
 
-        A.sort(function() {
-          return 0.5 - Math.random();
-        });
-        return A;
-      }
-      function sortted() {
-        while (tbody.firstChild) {
-          tbody.removeChild(tbody.firstChild);
-        }
-        var B = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
-        for (var j = 0; j < TABLE_DATA.length; j++) {
-          for (var i = 0; i < TABLE_DATA.length; i++) {
-            if (B[j] == parseInt(TABLE_DATA[i].id)) {
-              var tr = document.createElement("TR");
-              var th = document.createElement("TH");
-              th.setAttribute("id", "id" + i);
-              var th1 = document.createElement("TH");
-              var img = document.createElement("IMG");
-              img.setAttribute("id", "img" + i);
-              var th2 = document.createElement("TH");
-              th2.setAttribute("id", "name" + i);
-              var th3 = document.createElement("TH");
-              th3.setAttribute("id", "price" + i);
-
-              th1.appendChild(img);
-              tr.appendChild(th);
-              tr.appendChild(th1);
-              tr.appendChild(th2);
-              tr.appendChild(th3);
-
-              tbody.appendChild(tr);
-
-              document.getElementById("id" + i).innerHTML = TABLE_DATA[i].id;
-              document
-                .getElementById("img" + i)
-                .setAttribute("src", TABLE_DATA[i].thumbnailUrl);
-              if (j != 9) {
-                document.getElementById("name" + i).innerHTML =
-                  TABLE_DATA[i].name;
-              } else {
-                document.getElementById("name" + i).innerHTML = "cony #10";
-              }
-              document.getElementById("price" + i).innerHTML =
-                TABLE_DATA[i].price;
-            }
-          }
-        }
-      }
-      function arrangeRandomly() {
-        var randomArray = [];
-
-        while (tbody.firstChild) {
-          tbody.removeChild(tbody.firstChild);
-        }
-        randomArray = getRandomArray(0, 9);
-
-        randomArray.forEach(i => {
-          var tr = document.createElement("TR");
-          var th = document.createElement("TH");
-          th.setAttribute("id", "id" + i);
-          var th1 = document.createElement("TH");
-          var img = document.createElement("IMG");
-          img.setAttribute("id", "img" + i);
-          var th2 = document.createElement("TH");
-          th2.setAttribute("id", "name" + i);
-          var th3 = document.createElement("TH");
-          th3.setAttribute("id", "price" + i);
-
-          th1.appendChild(img);
-          tr.appendChild(th);
-          tr.appendChild(th1);
-          tr.appendChild(th2);
-          tr.appendChild(th3);
-          tbody.appendChild(tr);
-
-          document.getElementById("id" + i).innerHTML = TABLE_DATA[i].id;
-          document
-            .getElementById("img" + i)
-            .setAttribute("src", TABLE_DATA[i].thumbnailUrl);
-          if (i != 4) {
-            document.getElementById("name" + i).innerHTML = TABLE_DATA[i].name;
-          } else {
-            document.getElementById("name" + i).innerHTML = "cony #10";
-          }
-          document.getElementById("price" + i).innerHTML = TABLE_DATA[i].price;
-        });
-        setTimeout(arguments.callee, 60000);
-      }
-      for (var i = 0; i < TABLE_DATA.length; i++) {
+      const createRowAndDisplayResult = index => {
         var tr = document.createElement("TR");
         var th = document.createElement("TH");
-        th.setAttribute("id", "id" + i);
+        th.setAttribute("id", "id" + index);
         var th1 = document.createElement("TH");
         var img = document.createElement("IMG");
-        img.setAttribute("id", "img" + i);
+        img.setAttribute("id", "img" + index);
         var th2 = document.createElement("TH");
-        th2.setAttribute("id", "name" + i);
+        th2.setAttribute("id", "name" + index);
         var th3 = document.createElement("TH");
-        th3.setAttribute("id", "price" + i);
+        th3.setAttribute("id", "price" + index);
 
         th1.appendChild(img);
         tr.appendChild(th);
@@ -168,30 +78,77 @@
         tr.appendChild(th3);
         tbody.appendChild(tr);
 
-        document.getElementById("id" + i).innerHTML = TABLE_DATA[i].id;
+        document.getElementById("id" + index).innerHTML = TABLE_DATA[index].id;
         document
-          .getElementById("img" + i)
-          .setAttribute("src", TABLE_DATA[i].thumbnailUrl);
-        if (i != 4) {
-          document.getElementById("name" + i).innerHTML = TABLE_DATA[i].name;
+          .getElementById("img" + index)
+          .setAttribute("src", TABLE_DATA[index].thumbnailUrl);
+        if (index != 4) {
+          document.getElementById("name" + index).innerHTML =
+            TABLE_DATA[index].name;
         } else {
-          document.getElementById("name" + i).innerHTML = "cony #10";
+          document.getElementById("name" + index).innerHTML = "cony #10";
         }
-        document.getElementById("price" + i).innerHTML = TABLE_DATA[i].price;
+        document.getElementById("price" + index).innerHTML =
+          TABLE_DATA[index].price;
+      };
+    </script>
+
+    <script>
+      var tbody = document.getElementById("tbody");
+      function getRandomArray(min, max) {
+        var nonRepetitiveRandomArray = [];
+        while (max >= min) nonRepetitiveRandomArray.push(max--);
+
+        nonRepetitiveRandomArray.sort(function() {
+          return 0.5 - Math.random();
+        });
+        return nonRepetitiveRandomArray;
+      }
+      function sortTableList() {
+        while (tbody.firstChild) {
+          tbody.removeChild(tbody.firstChild);
+        }
+        var sortedNumbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+
+        for (var outerIndex = 0; outerIndex < TABLE_DATA.length; outerIndex++) {
+          for (var index = 0; index < TABLE_DATA.length; index++) {
+            if (sortedNumbers[outerIndex] == parseInt(TABLE_DATA[index].id)) {
+              createRowAndDisplayResult(index);
+            }
+          }
+        }
+      }
+
+      function arrangeRandomly() {
+        var randomArray = [];
+
+        while (tbody.firstChild) {
+          tbody.removeChild(tbody.firstChild);
+        }
+        randomArray = getRandomArray(0, 9);
+
+        randomArray.forEach(index => {
+          createRowAndDisplayResult(index);
+        });
+      }
+
+      for (var index = 0; index < TABLE_DATA.length; index++) {
+        createRowAndDisplayResult(index);
       }
 
       var repeat;
-      function started() {
+      function arrangeRandomelyAfterEveryTwoSec() {
         repeat = window.setInterval(() => {
           arrangeRandomly();
         }, 2000);
         return repeat;
       }
 
-      function stopped() {
+      function stopRandomTimer() {
         window.clearInterval(repeat);
       }
     </script>
+
     <script src="js/app.js"></script>
   </body>
 </html>
